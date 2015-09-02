@@ -1,0 +1,9 @@
+# OS Specific
+.DS_Store
+.Trash
+
+# Vagrant
+.vagrant
+
+# Wordpress
+www/*
