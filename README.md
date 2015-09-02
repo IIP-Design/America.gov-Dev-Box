@@ -31,7 +31,7 @@ $ git checkout -b staging origin/staging
 $ git checkout master
 ```
 
-Move the `wp-config.php` file from `www` to the `america` directory. Delete the `.htaccess` file, and change to the the `america` directory
+Move the `wp-config.php` file from `www` to the `america` directory, delete the `.htaccess` file, and change to the the `america` directory:
 
 ```
 $ mv wp-config.php ../
@@ -168,7 +168,7 @@ Move the America.gov wp-config.php file into it's place:
 [vagrant@america www]$ mv ../wp-config.php ./
 ```
 
-Edit the `wp-config.php` file. **Search for WP_SITEURL and make sure it points to `/wp'**. Also comment out the Multsite bit and save:
+Edit the `wp-config.php` file. **Search for WP_SITEURL and make sure it points to `/wp`**. Also comment out the Multsite bit and save:
 
 ```java
 /* Multisite */
@@ -239,9 +239,11 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and $_SERVER['HTTP_X_FORWARDED_PRO
 }
 ```
 
-Replace the `.htaccess` file with that in the America.gov repo:
+Check that you're in `www`, and replace the `.htaccess` file the one in the America.gov repo:
 
 ```
+$ pwd
+../../../america/www
 $ curl -O https://raw.githubusercontent.com/IIP-Design/America.gov/master/.htaccess
 ```
 
