@@ -23,17 +23,18 @@ $ git clone git@github.com:IIP-Design/America.gov.git www
 $ cd www
 ```
 
-Start a local tracking branch for each of the repo's other remote branches:
+Start a local tracking branch for each of the repo's other remote branches, and switch back to `master`:
 
 ```
 $ git checkout -b dev origin/dev
 $ git checkout -b staging origin/staging
+$ git checkout master
 ```
 
 Move the `wp-config.php` file from `www` to the `america` directory. Delete the `.htaccess` file, and change to the the `america` directory
 
 ```
-$ mv wp-config.php
+$ mv wp-config.php ../
 $ rm .htaccess
 $ cd ../
 ```
@@ -167,9 +168,7 @@ Move the America.gov wp-config.php file into it's place:
 [vagrant@america www]$ mv ../wp-config.php ./
 ```
 
-
-
-Edit the `wp-config.php` file. Search for WP_SITEURL and make sure it points to `/wp'. Also comment out the Multsite bit and save:
+Edit the `wp-config.php` file. **Search for WP_SITEURL and make sure it points to `/wp'**. Also comment out the Multsite bit and save:
 
 ```java
 /* Multisite */
@@ -240,29 +239,13 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and $_SERVER['HTTP_X_FORWARDED_PRO
 }
 ```
 
-Edit `www/.htaccess` and replace it with the following:
+Replace the `.htaccess` file with that in the America.gov repo:
 
-```java
-# BEGIN WordPress
-
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.php$ - [L]
-
-# add a trailing slash to /wp-admin
-RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
-
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) wp/$2 [L]
-RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ wp/$2 [L]
-RewriteRule . index.php [L]
-
-# END WordPress
+```
+$ curl -O https://raw.githubusercontent.com/IIP-Design/America.gov/master/.htaccess
 ```
 
-Make sure you can still access the [dev site](http://america.dev), and that you can still [login](http://america.dev/wp-login.php).
+Make sure you can still access the http://america.dev, and that you can login: http://america.dev/wp-login.php. **Note**: The login url changed!
 
 The last edit you should have to make to `www/wp-config.php` is to uncomment the following line:
 
@@ -276,7 +259,7 @@ In the Network Admin, go to the Plugins menu, and Network Activate the America T
 
 Then go to the Themes menu and Network Activate the America.gov Base Theme.
 
-Let's add the following sites to the network:
+Let's add the following sites to the network by going to the Sites menu:
 
 * Climate Partners (climate.america.dev)
 * Interactive (interactive.america.dev)
