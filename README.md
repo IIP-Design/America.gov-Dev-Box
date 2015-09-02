@@ -7,7 +7,7 @@ Built on top of the [Design Dev Box](https://github.com/USStateDept/design-dev-b
 Clone the dev box as `america`:
 
 ```
-$ git clone git@github.com:USStateDept/design-dev-box.git america
+$ git clone git@github.com:USStateDept/America.gov-Dev-Box.git america
 ```
 
 Change to `america`:
@@ -16,25 +16,29 @@ Change to `america`:
 $ cd america
 ```
 
-Delete the `www` directory:
-
-```
-$ rm -rf www
-```
-
-Clone the America.gov repo as `www`:
+Clone the America.gov repo as `www` and change to that directory.
 
 ```
 $ git clone git@github.com:IIP-Design/America.gov.git www
+$ cd www
 ```
 
-Move the `wp-config.php` and `.htaccess` files from `www` to the `america` directory
+Start a local tracking branch for each of the repo's other remote branches:
 
 ```
-$ mv www/wp-config.php www/.htaccess ./
+$ git checkout -b dev origin/dev
+$ git checkout -b staging origin/staging
 ```
 
-Edit the `site.yml` file. Change the fields specified below to something like the following. Change to suit your individual needs:
+Move the `wp-config.php` file from `www` to the `america` directory. Delete the `.htaccess` file, and change to the the `america` directory
+
+```
+$ mv wp-config.php
+$ rm .htaccess
+$ cd ../
+```
+
+If necessary, edit the `site.yml` file and change the fields below if the defaults conflict with your hosts file (`/etc/hosts`).
 
 ```yml
 #
@@ -50,14 +54,13 @@ Spin up Vagrant, and let it run through it's provisioning process.
 $ vagrant up
 ```
 
-Copy the .htaccess file from the Design Dev Box repo into the `www` directory:
+Move to the `www` directory:
 
 ```
-$ cd www/
-$ curl -O https://raw.githubusercontent.com/IIP-Design/America.gov/master/.htaccess
+$ cd www
 ```
 
-Move the `wp-config.php` file from `wp` to `www`:
+Move the `wp-config.php` file from `www/wp` to `www`:
 
 ```
 $ mv wp/wp-config.php ./
@@ -103,7 +106,7 @@ SSH into the Vagrant box:
 $ vagrant ssh
 ```
 
-Install vim or your favorite \*nix editor:
+Install vim or your favorite \*nix text editor:
 
 ```
 $ sudo yum install vim
@@ -116,7 +119,7 @@ Change to the Apache configuration directory, and create the `envvar.conf` file:
 [vagrant@america conf.d]$ sudo vim envvar.conf
 ```
 
-Add the following. You'll need to add the salts from your `www/wp-config.php`:
+Add the following. You'll need to add the salts from your `www/wp-config.php`. **Don't use these**:
 
 ```apache2
 SetEnv  AUTH_KEY                        'tQ.]!CiUVLUwPRH+_BPH X=ry11c$shHa^VxiO[5vf|6+%F3|5TI2tbr]x!2>+6T'
@@ -151,10 +154,10 @@ Change to `/vagrant/www/`
 [vagrant@america conf.d]$ cd /vagrant/www/
 ```
 
-Rename the `wp-config.php`:
+Delete the `wp-config.php`:
 
 ```
-[vagrant@america www]$ mv www/wp-config.php www/wp-config.old.php
+[vagrant@america www]$ rm wp-config.php
 
 ```
 
@@ -164,7 +167,9 @@ Move the America.gov wp-config.php file into it's place:
 [vagrant@america www]$ mv ../wp-config.php ./
 ```
 
-Edit the file and comment out the Multsite bit and save:
+
+
+Edit the `wp-config.php` file. Search for WP_SITEURL and make sure it points to `/wp'. Also comment out the Multsite bit and save:
 
 ```java
 /* Multisite */
@@ -187,7 +192,7 @@ define('SUNRISE', 'on'); // wordpress-mu-domain-mapping activation*/
 
 ```
 
-Confirm that you can still connect to the DB by going to http://america.gov. Confirm that you can login to http://america.gov/wp/wp-login.php.
+Confirm that you can still connect to the DB by going to http://america.dev. Confirm that you can login to http://america.dev/wp/wp-login.php.
 
 Turn on Multisite in the `www/wp-config.php` file by uncommenting the following:
 
