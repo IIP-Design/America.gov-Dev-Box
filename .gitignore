@@ -6,4 +6,4 @@
 .vagrant
 
 # Wordpress
-www/*
+www
