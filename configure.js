@@ -4,7 +4,6 @@ var async = require('async'),
 	replaceStream = require('replacestream'),
 	randomstring = require("randomstring"),
 	prompt = require('prompt'),
-	wp = require('wp-cli'),
 	spawn = require('child_process').spawn,
 	exec = require('child_process').exec;
 
@@ -24,12 +23,12 @@ tasks = [
 	apacheRestart,
 	moveConfig,
 	editConfig1,
-	promptToTest,
+	//promptToTest,
 	editConfig2,
 	convertToMultisite,
 	editConfig3,
 	replaceHtAccess,
-	promptToTest2,
+	//promptToTest2,
 	editconfig4,
 	activateExtender,
 	enableBaseTheme,
@@ -49,7 +48,7 @@ async.waterfall( tasks, function ( err, result ) {
     	
     	msg( 'Uh oh, something went wrong...  ');
     }
-    msg("-------  Process complete -----------\nYou should now have a basic development environment, that doesn't include any data.");
+    msg("-------  Process complete -----------\nYou should now have a basic development environment, that doesn't include any data.\nVerify successful install by visiting the frontend http://america.dev\nand attempting to login in at  http://america.dev/wp/wp-admin/ using user:admin, password: admin");
 });
 
 function whereAmI() {

@@ -41,6 +41,29 @@ define( 'FORCE_SSL_ADMIN', true );
 define( 'SAVEQUERIES', false );
 
 
+/**
+ * Show a green banner when on the AWS enviroment to avoid confusion
+ */
+if (getenv('AWS_ENV') == 'STARBUCK') {
+	define('AWS_ENV', 'STARBUCK');
+} else {
+	define('AWS_ENV', 'other');
+}
+
+/**
+ * For developers: WordPress debugging mode.
+ *
+ * Change this to true to enable the display of notices during development.
+ * It is strongly recommended that plugin and theme developers use WP_DEBUG
+ * in their development environments.
+ */
+if (getenv('DEV') == 'True') {
+	define('WP_DEBUG', true);
+	define('WP_DEBUG_LOG', true);
+} else {
+	define('WP_DEBUG', false);
+}
+
 // Tells Wordpress to look for the wp-content directory in a non-standard location
 define('WP_CONTENT_DIR', __DIR__ . '/wp-content');
 

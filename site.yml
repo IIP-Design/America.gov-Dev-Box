@@ -17,7 +17,7 @@ cpus: 1
 # Network Settings
 #
 hostname: america.dev
-ip: 192.168.33.45
+ip: 192.168.33.42
 sync_folder: 'www'
 
 #

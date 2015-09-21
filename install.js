@@ -5,7 +5,6 @@ var async = require('async'),
 	replaceStream = require('replacestream'),
 	prompt = require('prompt'),
 	randomstring = require("randomstring"),
-	WP = require('wp-cli'),
 	spawn = require('child_process').spawn;
 
 var schema = {
@@ -45,7 +44,7 @@ tasks = [
 	vagrantUp,
 	editConfig1,
 	deleteConfig,	
-	composer			
+	composer,			
 	promptForSSH
 ]
 
@@ -63,7 +62,8 @@ function whereAmI() {
 	 msg( 'In directory ' + process.cwd() ); 
 }
 
-function promptForInstructions() {
+function promptForInstructions( callback ) {
+	msg('');
 	msg('');
 	prompt.start();
 	prompt.get(['This install will create an america.dev domain on your local machine.\nIf an america.dev domain already exists, then this will create a conflict\nRemove or rename it before continuing.\nHit enter when you are ready to continue....'], function() {
@@ -83,8 +83,7 @@ function cloneDevBox ( callback ) {
 
 function cloneSite ( callback ) {
 	msg('Cloning the america.gov repository');
-	//https://github.com/USStateDept/America.gov.git
-	git.clone( 'https://github.com/IIP-Design/America.gov.git', 'america/www', function( err ) {
+	git.clone( 'https://github.com/USStateDept/America.gov.git', 'www', function( err ) {
 		callback();
 	});
 }
@@ -228,7 +227,7 @@ function vagrantUp( callback ) {
 
 function editConfig1( callback ) {
 	msg('Editing wp-config')
-	fse.move( 'templates/wp-config.tpl-1.php', 'www/wp-config.php', function ( err ) {
+	fse.copy( 'templates/wp-config.tpl-1.php', 'www/wp-config.php', function ( err ) {
   		callback();
 	});
 }
