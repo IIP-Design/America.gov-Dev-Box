@@ -268,8 +268,6 @@ Let's add the following sites to the network by going to the Sites menu:
 * Don't Be Fooled (facts.america.dev)
 * Documentation (docs.america.dev)
 
-On your host machine (Mac or Windows), you'll need to add the domains for each of the sites to the `/etc/hosts` file (or equivalent).
-
 Visit each site's Wordpress Admin and activate the America.gov Base Theme.
 
 Go to the Genesis menu and import each of the `.json` theme settings files found in `america/theme-settings`.
