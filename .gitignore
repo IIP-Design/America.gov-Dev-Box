@@ -2,8 +2,7 @@
 .DS_Store
 .Trash
 
-# Vagrant
 .vagrant
-
-# Wordpress
 www
+wp-config.php
+node_modules/

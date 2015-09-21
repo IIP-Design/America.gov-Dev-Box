@@ -5,12 +5,11 @@ var async = require('async'),
 	randomstring = require("randomstring"),
 	prompt = require('prompt'),
 	wp = require('wp-cli'),
-	spawn = require('child_process').spawn;
+	spawn = require('child_process').spawn,
+	exec = require('child_process').exec;
 
 var child,
 	tasks = [];
-
-msg('In vagrant box');
 
 function msg( msg ) {
 	console.log( msg) ;
@@ -18,23 +17,30 @@ function msg( msg ) {
 
 tasks = [
 	verifyConnection,
+	activateGenesis,
+	verifyGenesis,
 	createSalts,
 	copyEnvvar,
-	loginnAsRoot,
-	apacheRestart
-	moveConfig3,
-	editConfig4,
+	apacheRestart,
+	moveConfig,
+	editConfig1,
 	promptToTest,
+	editConfig2,
 	convertToMultisite,
 	editConfig3,
 	replaceHtAccess,
-	promptToTest,
-	editconfig6,
+	promptToTest2,
+	editconfig4,
 	activateExtender,
 	enableBaseTheme,
-	addSites,
-	updateHosts
-	activateBaseTheme,
+	addDocsSite,
+	addClimateSite,
+	addFactsSite,
+	addInteractiveSite,
+	activateBaseThemeDocs,
+	activateBaseThemeClimate,
+	activateBaseThemeFacts,
+	activateBaseThemeInteractive
 ]
 
 // Runs on load
@@ -54,10 +60,35 @@ function verifyConnection( callback ) {
 	msg('Logged into vagrant box.'); 
 	callback();
 }
+
+function activateGenesis ( callback ) {
+	msg( 'Activating  genesis...' );
+
+	process.chdir( 'www/wp' );
+
+	child = exec('/usr/local/bin/wp theme activate Genesis', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+function verifyGenesis( callback ) {
+	msg( 'Verifying Genesis activations...' );
+	msg('');
+	prompt.start();
+	prompt.get(['Complete the following:\n1. Login to site at  http://america.dev/wp/wp-admin/ and update database as prompted.\n2. Hit continue and login with username: admin and password: admin.\n3. Visit frontend and ensure all is working.\n4. Hit enter to continue...'], function() {
+		callback();
+	})
+}
  
-// next taks to to execute from vagrant box (need sudo)
 function createSalts( callback ) {
 	msg( 'Creating salts... ' ); 
+
+	process.chdir( '/vagrant' );
 
 	fileTpl = 'templates/envvar.tpl.conf';   	
 	file = 	'templates/envvar.conf';				
@@ -109,7 +140,7 @@ function apacheRestart( callback ) {
 	});
 }
 
-function moveConfig3( callback ) {
+function moveConfig( callback ) {
 	msg('Moving wp-config.php to www folder');
 	
 	fse.move( 'wp-config.php', 'www/wp-config.php', function ( err ) {
@@ -117,7 +148,7 @@ function moveConfig3( callback ) {
 	});
 }
 
-function editConfig4( callback ) {
+function editConfig1( callback ) {
 	msg('Editing config...');
 	
 	fse.move( 'templates/wp-config.tpl-2.php', 'www/wp-config.php', function ( err ) {
@@ -127,22 +158,35 @@ function editConfig4( callback ) {
 
 function promptToTest( callback ) {
 	prompt.start();
-	prompt.get(['Confirm that you can still connect to the DB by:\n 1. Go to http://america.dev toverify frontend loads\n 2. Confirm that you can login to http://america.dev/wp/wp-login.php.\n3. If login successful, hit enter to continue..'], function() {
+	prompt.get(['Confirm that you can still connect to the DB by:\n 1. Go to http://america.dev to verify frontend loads\n 2. Confirm that you can login to http://america.dev/wp/wp-login.php.\n3. If login successful, hit enter to continue..'], function() {
 		callback();
 	});
 }
 
-function convertToMultisite () {
-	msg('Converting to multisite installation...');
-
-	wp.discover({path:'www/wp', user: 'admin:admin'}, function (wp) {
-    	wp.core.multisite-convert( '--subdomains', function( err, result ) { //get CLI info
-        	msg( result );
-    	});  
+function editConfig2( callback ) {
+	msg('Allowing multisite...');
+	
+	fse.move( 'templates/wp-config.tpl-3.php', 'www/wp-config.php', function ( err ) {
+  		callback();
 	});
 }
 
-function editconfig4( callback ) {
+function convertToMultisite ( callback ) {
+	msg('Converting to multisite installation...');
+
+	process.chdir( 'www/wp' );
+
+	child = exec('/usr/local/bin/wp core multisite-convert --subdomains', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+function editConfig3( callback ) {
 	msg('Completing multisite installation...');
 	
 	fse.move( 'templates/wp-config.tpl-4.php', 'www/wp-config.php', function ( err ) {
@@ -153,19 +197,21 @@ function editconfig4( callback ) {
 function replaceHtAccess( callback ) {
 	msg('Moving .htaccess file...');
 	
-	fse.move( 'templates/.htaccess', 'www/.htaccess/Applications/MAMP/bin/php/php5.6.2/bin', function ( err ) {
+	process.chdir( '/vagrant' );
+
+	fse.copy( 'templates/.htaccess', 'www/.htaccess', function ( err ) {
   		callback();
 	});
 }
 
-function promptToTest( callback ) {
+function promptToTest2( callback ) {
 	prompt.start();
-	prompt.get(['Make sure you can still access the http://america.dev, and that you can login: http://america.dev/wp-login.php.\n Note: The login url changed! After verification, hit Enter to continue...'], function() {
+	prompt.get(['Make sure you can still access the http://america.dev, and that you can login: http://america.dev/wp/wp-admin/.\nHit Enter to continue...'], function() {
 		callback();
 	});
 }
 
-function editconfig5( callback ) {
+function editconfig4( callback ) {
 	msg('Enabling domain mapping...');
 	
 	fse.move( 'templates/wp-config.tpl-5.php', 'www/wp-config.php', function ( err ) {
@@ -173,52 +219,140 @@ function editconfig5( callback ) {
 	});
 }
 
-
 function activateExtender( callback ) {
 	msg('Activating America Theme Extender...');
 
-	wp.discover({path:'www/wp', user: 'admin:admin'}, function (wp) {
-    	wp.plugin.activate( 'America Theme Extender', function( err, result ) { 
-        	msg( result );
-    	});  
+	process.chdir( 'www/wp' );
+
+	child = exec('/usr/local/bin/wp plugin activate america-theme-extender --network', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
 	});
 }
-
 
 function enableBaseTheme( callback ) {
 	msg('Network enabling America.gov Base Theme...');
 
-	wp.discover({path:'www/wp', user: 'admin:admin'}, function (wp) {
-    	wp.theme.enable( 'America.gov Base Theme', '--network', function( err, result ) { 
-        	msg( result );
-    	});  
+	child = exec('/usr/local/bin/wp theme enable america --network', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
 	});
 }
 
-function addSites( callback ) {
-	msg('Adding sites to the network...');
+function addDocsSite( callback ) {
+	msg('Adding docs site to the network...');
 
-	wp.discover({path:'www/wp', user: 'admin:admin'}, function (wp) {
-    	wp.site.create( 'climate', function( err, result ) { 
-        	msg( result );
-    	}); 
-    	wp.site.create( 'interactive', function( err, result ) { 
-        	msg( result );
-    	}); 
-    	wp.site.create( 'facts', function( err, result ) {
-        	msg( result );
-    	}); 
-    	wp.site.create( 'docs', function( err, result ) {
-        	msg( result );
-    	});  
+	child = exec('/usr/local/bin/wp site create --slug=docs', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
 	});
 }
 
-function upateHosts( callback ) {
-	msg('Update hosts')
+function addClimateSite( callback ) {
+	msg('Adding climate site to the network...');
+
+	child = exec('/usr/local/bin/wp site create --slug=climate', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
 }
 
-function activateBaseTheme( callback ) {
-	msg('activateBaseTheme')
+function addFactsSite( callback ) {
+	msg('Adding facts site to the network...');
+
+	child = exec('/usr/local/bin/wp site create --slug=facts', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+function addInteractiveSite( callback ) {
+	msg('Adding interactive site to the network...');
+
+	child = exec('/usr/local/bin/wp site create --slug=interactive', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+
+function activateBaseThemeDocs( callback ) {
+	
+	msg('Activating america base theme for sites...');
+	
+	child = exec('/usr/local/bin/wp theme activate america --url=docs.america.dev', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+function activateBaseThemeClimate( callback ) {
+	
+	msg('Activating america base theme for sites...');
+	
+	child = exec('/usr/local/bin/wp theme activate america --url=climate.america.dev', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+function activateBaseThemeFacts( callback ) {
+	
+	msg('Activating america base theme for sites...');
+	
+	child = exec('/usr/local/bin/wp theme activate america --url=facts.america.dev', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+function activateBaseThemeInteractive( callback ) {
+	
+	msg('Activating america base theme for sites...');
+	
+	child = exec('/usr/local/bin/wp theme activate america --url=interactive.america.dev', function ( err, stdout, stderr ) {
+		msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
 }
 

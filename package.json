@@ -13,7 +13,7 @@
     "fs-extra": "^0.24.0",
     "prompt": "^0.2.14",
     "replacestream": "^4.0.0",
-    "randomstring": "^1.1.0",
-     "wp-cli": "0.0.5"
+    "simple-git": "^1.8.0",
+    "randomstring": "^1.1.0"
   }
 }
