@@ -79,7 +79,7 @@ function verifyGenesis( callback ) {
 	msg( 'Verifying Genesis activations...' );
 	msg('');
 	prompt.start();
-	prompt.get(['Complete the following:\n1. Login to site at  http://america.dev/wp/wp-admin/ and update database as prompted.\n2. Hit continue and login with username: admin and password: admin.\n3. Visit frontend and ensure all is working.\n4. Hit enter to continue...'], function() {
+	prompt.get(['Complete the following:\n1. Login to site at  http://america.dev/wp/wp-admin/\n2. Update database as prompted.\n3. Hit continue and login with username: admin and password: admin.\n4. Visit frontend and ensure all is working.\n5. Hit enter to continue...'], function() {
 		callback();
 	})
 }
