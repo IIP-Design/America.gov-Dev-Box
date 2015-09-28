@@ -5,9 +5,10 @@ var async = require('async'),
 	randomstring = require("randomstring"),
 	prompt = require('prompt'),
 	spawn = require('child_process').spawn,
-	exec = require('child_process').exec;
+	exec = require('child_process').exec,
+	zlib = require('zlib');
 
-var child,
+var child, w, r,
 	tasks = [];
 
 function msg( msg ) {
@@ -32,14 +33,15 @@ tasks = [
 	editconfig4,
 	activateExtender,
 	enableBaseTheme,
-	addDocsSite,
-	addClimateSite,
-	addFactsSite,
-	addInteractiveSite,
-	activateBaseThemeDocs,
-	activateBaseThemeClimate,
-	activateBaseThemeFacts,
-	activateBaseThemeInteractive
+	importDB
+	// addDocsSite,
+	// addClimateSite,
+	// addFactsSite,
+	// addInteractiveSite,
+	// activateBaseThemeDocs,
+	// activateBaseThemeClimate,
+	// activateBaseThemeFacts,
+	// activateBaseThemeInteractive
 ]
 
 // Runs on load
@@ -48,7 +50,7 @@ async.waterfall( tasks, function ( err, result ) {
     	
     	msg( 'Uh oh, something went wrong...  ');
     }
-    msg("-------  Process complete -----------\nYou should now have a basic development environment, that doesn't include any data.\nVerify successful install by visiting the frontend http://america.dev\nand attempting to login in at  http://america.dev/wp/wp-admin/ using user:admin, password: admin");
+    msg("-------  Process complete -----------\nYou should now have a basic development environment.\nVerify successful install by visiting the frontend http://america.dev\nand attempting to login in at  http://america.dev/wp/wp-admin/ using user:admin, password: admin");
 });
 
 function whereAmI() {
@@ -354,4 +356,31 @@ function activateBaseThemeInteractive( callback ) {
 		callback();
 	});
 }
+
+function importDB( callback ) {
+	process.chdir( '/vagrant' );
+
+	var gunzip = zlib.createGunzip();
+
+	r = fse.createReadStream('america.gov.sql.gz');
+	w = fse.createWriteStream( 'america.gov.sql' );
+
+	// uncompresses
+	r.pipe( gunzip )  
+	 .pipe( w );  
+
+	 // may need to drop wordpress db and recreate it before importing dump		
+	
+	// import
+	child = exec('mysql -u wordpress -p  wordpress < america.gov.sql', function ( err, stdout, stderr ) {
+		//msg( 'stdout: ' + stdout );
+	    msg( 'stderr: ' + stderr );
+		if( err ) {
+		 	msg( err.code );
+		}
+		callback();
+	});
+}
+
+
 

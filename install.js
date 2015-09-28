@@ -54,7 +54,7 @@ async.waterfall( tasks, function ( err, result ) {
     	
     	msg( 'Uh oh, something went wrong...  ');
     }
-    msg("Follow the follow steps:\n1. Type 'cd america'\n2. Type 'vagrant ssh\n3. After login, type 'cd \/vagrant'\n4. Type 'sh configure.sh\n5. Hit enter'");
+    msg("Follow the follow steps:\n1. Type 'vagrant ssh\n2. After login, type 'cd \/vagrant'\n3. Type 'sh configure.sh\n4. Hit enter'");
   });
 
 // debug utitlity
