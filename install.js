@@ -9,11 +9,8 @@ var async = require('async'),
 
 var schema = {
 	properties: {
-		hostname: {
-			description: 'The default hostname is america.dev.  Hit enter to accept default or type new hostname'
-		},
 		ip: {
-			description: 'The default ip is 192.168.33.45.  Hit enter to accept default or type new ip'
+			description: 'The default ip is 192.168.33.41.  Hit enter to accept default or type new ip'
 		}
 	}
 }
@@ -83,7 +80,9 @@ function cloneDevBox ( callback ) {
 
 function cloneSite ( callback ) {
 	msg('Cloning the america.gov repository');
-	git.clone( 'https://github.com/USStateDept/America.gov.git', 'www', function( err ) {
+	
+	// https://github.com/USStateDept/America.gov.git
+	git.clone( 'https://github.com/IIP-Design/America.gov.git', 'www', function( err ) {
 		callback();
 	});
 }
@@ -159,7 +158,7 @@ function updateSiteYml ( result, callback ) {
 	msg ('Updating site.yml file with');
 	
    	var host = 'america.dev', 
-   		ip = '192.168.33.45', 
+   		ip = '192.168.33.41', 
    		fileTpl, file, w, r;
 
    	if( result.hostname ) {
