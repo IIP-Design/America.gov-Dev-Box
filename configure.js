@@ -33,14 +33,14 @@ tasks = [
 	editconfig4,
 	activateExtender,
 	enableBaseTheme,
-	addDocsSite,
-	addClimateSite,
-	addFactsSite,
-	addInteractiveSite,
-	activateBaseThemeDocs,
-	activateBaseThemeClimate,
-	activateBaseThemeFacts,
-	activateBaseThemeInteractive,
+	// addDocsSite,
+	// addClimateSite,
+	// addFactsSite,
+	// addInteractiveSite,
+	// activateBaseThemeDocs,
+	// activateBaseThemeClimate,
+	// activateBaseThemeFacts,
+	// activateBaseThemeInteractive,
 	promptForImport
 	// importDB
 ]
@@ -361,7 +361,7 @@ function activateBaseThemeInteractive( callback ) {
 function promptForImport( callback ) {
 	msg('');
 	prompt.start();
-	prompt.get(["Next, you will need to import the america.gov database.\n 1.Copy the  america.gov.sql script to the vagrant directory. 2. Run sh db.sh using 'wordpress' as the password'. Hit enter after the import to continue..."], function() {
+	prompt.get(["Next, you will need to import the america.gov database.\n 1.Copy the  america.gov.sql script to the vagrant directory.\n 2. Run sh db.sh using 'wordpress' as the password'. Hit enter after the import to continue..."], function() {
 		callback();
 	})
 }
