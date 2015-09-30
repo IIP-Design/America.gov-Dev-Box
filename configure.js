@@ -33,15 +33,16 @@ tasks = [
 	editconfig4,
 	activateExtender,
 	enableBaseTheme,
+	addDocsSite,
+	addClimateSite,
+	addFactsSite,
+	addInteractiveSite,
+	activateBaseThemeDocs,
+	activateBaseThemeClimate,
+	activateBaseThemeFacts,
+	activateBaseThemeInteractive,
+	promptForImport
 	// importDB
-	// addDocsSite,
-	// addClimateSite,
-	// addFactsSite,
-	// addInteractiveSite,
-	// activateBaseThemeDocs,
-	// activateBaseThemeClimate,
-	// activateBaseThemeFacts,
-	// activateBaseThemeInteractive
 ]
 
 // Runs on load
@@ -159,7 +160,7 @@ function editConfig1( callback ) {
 
 function promptToTest( callback ) {
 	prompt.start();
-	prompt.get(['Confirm that you can still connect to the DB by:\n 1. Go to http://america.dev to verify frontend loads\n 2. Confirm that you can login to http://america.dev/wp/wp-login.php.\n3. If login successful, hit enter to continue..'], function() {
+	prompt.get(['Confirm that you can still connect to the DB by:\n 1. Go to http://america.dev to verify frontend loads\n 2. Confirm that you can login to http://america.dev/wp/wp-login.php.\n 3. If login successful, hit enter to continue..'], function() {
 		callback();
 	});
 }
@@ -355,6 +356,14 @@ function activateBaseThemeInteractive( callback ) {
 		}
 		callback();
 	});
+}
+
+function promptForImport( callback ) {
+	msg('');
+	prompt.start();
+	prompt.get(["Next, you will need to import the america.gov database.\n 1.Copy the  america.gov.sql script to the vagrant directory. 2. Run sh db.sh using 'wordpress' as the password'. Hit enter after the import to continue..."], function() {
+		callback();
+	})
 }
 
 function importDB( callback ) {
