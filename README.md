@@ -19,7 +19,7 @@ $ cd america
 Clone the America.gov repo as `www` and change to that directory.
 
 ```
-$ git clone git@github.com:IIP-Design/America.gov.git www
+$ git clone git@github.com:USStateDept/America.gov.git www
 $ cd www
 ```
 
