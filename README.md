@@ -123,24 +123,25 @@ Change to the Apache configuration directory, and create the `envvar.conf` file:
 Add the following. You'll need to add the salts from your `www/wp-config.php`. **Don't use these**:
 
 ```apache2
-SetEnv  AUTH_KEY                        'tQ.]!CiUVLUwPRH+_BPH X=ry11c$shHa^VxiO[5vf|6+%F3|5TI2tbr]x!2>+6T'
-SetEnv  SECURE_AUTH_KEY                 'fjS8OxiG&tty-rf,9>dFm)Th79g>qr+iq.Yv-`@BS+?JxF,[@~tO.+nWs>qL~s}t'
-SetEnv  LOGGED_IN_KEY                   'qvqq<fJAIDJK~YfEL>|X-.$$Tc]vJL(1+K;M}A$m4:wVo|G_ #V5<@y,+D5_Or$E'
-SetEnv  NONCE_KEY                       '!sF)xn6IF-V&O`[rb$*6Rc+-~/6q>boo~2v 7|k1I~{5ou>,ZIW}]S1p;[UVj?5R'
-SetEnv  AUTH_SALT                       ':?H3(V5U,TV(HA3ajI^u`bcw@}H4NfR/)q+))Ilpy e**j:^TXP4X,KQrc;6m|tO'
-SetEnv  SECURE_AUTH_SALT                'sT]1s02Nw4wN__]ei;~u&MR|2hRIHTT#6I_2Vg|5t4}ur?PeHcC+2BMx-[d8|/jg'
-SetEnv  LOGGED_IN_SALT                  'b5v`~mOe,Nuh#4b.ol2 HSH.A)H,`{659P*&L.*EX0}Uk?UJKpud?~y0wMR+N;1>'
-SetEnv  NONCE_SALT                      ',3K&W|]XzlAb`CFcM%|=MZ8cQ,DM_r7x51dKum,i|LUlaB2zeb &iB7>9yB|j0L+'
+SetEnv  AMGOV_AUTH_KEY                        'tQ.]!CiUVLUwPRH+_BPH X=ry11c$shHa^VxiO[5vf|6+%F3|5TI2tbr]x!2>+6T'
+SetEnv  AMGOV_SECURE_AUTH_KEY                 'fjS8OxiG&tty-rf,9>dFm)Th79g>qr+iq.Yv-`@BS+?JxF,[@~tO.+nWs>qL~s}t'
+SetEnv  AMGOV_LOGGED_IN_KEY                   'qvqq<fJAIDJK~YfEL>|X-.$$Tc]vJL(1+K;M}A$m4:wVo|G_ #V5<@y,+D5_Or$E'
+SetEnv  AMGOV_NONCE_KEY                       '!sF)xn6IF-V&O`[rb$*6Rc+-~/6q>boo~2v 7|k1I~{5ou>,ZIW}]S1p;[UVj?5R'
+SetEnv  AMGOV_AUTH_SALT                       ':?H3(V5U,TV(HA3ajI^u`bcw@}H4NfR/)q+))Ilpy e**j:^TXP4X,KQrc;6m|tO'
+SetEnv  AMGOV_SECURE_AUTH_SALT                'sT]1s02Nw4wN__]ei;~u&MR|2hRIHTT#6I_2Vg|5t4}ur?PeHcC+2BMx-[d8|/jg'
+SetEnv  AMGOV_LOGGED_IN_SALT                  'b5v`~mOe,Nuh#4b.ol2 HSH.A)H,`{659P*&L.*EX0}Uk?UJKpud?~y0wMR+N;1>'
+SetEnv  AMGOV_NONCE_SALT                      ',3K&W|]XzlAb`CFcM%|=MZ8cQ,DM_r7x51dKum,i|LUlaB2zeb &iB7>9yB|j0L+'
 
-SetEnv  OPENSHIFT_APP_NAME              'wordpress'
-SetEnv  OPENSHIFT_MYSQL_DB_USERNAME     'wordpress'
-SetEnv  OPENSHIFT_MYSQL_DB_PASSWORD     'wordpress'
-SetEnv  OPENSHIFT_MYSQL_DB_HOST         'localhost'
-SetEnv  OPENSHIFT_MYSQL_DB_PORT         '3306'
-SetEnv  OPENSHIFT_APP_DNS               'america.dev'
+SetEnv  AMGOV_DB_NAME                           'wordpress'
+SetEnv  AMGOV_DB_USER                           'wordpress'
+SetEnv  AMGOV_DB_PASSWORD                       'wordpress'
+SetEnv  AMGOV_DB_HOST                           'localhost'
+SetEnv  AMGOV_DB_PORT         									'3306'
+SetEnv  AMGOV_DOMAIN_CURRENT_SITE               'america.dev'
 
-SetEnv  DEV                             'True'
-SetEnv  SUBDOMAIN_INSTALL               'True'
+SetEnv  DEV                                     'True'
+SetEnv  SUBDOMAIN_INSTALL                       'True'
+
 ```
 
 Restart Apache:
@@ -180,7 +181,7 @@ if (getenv('SUBDOMAIN_INSTALL') == 'True') {
 } else {
 	define('SUBDOMAIN_INSTALL', false);
 }
-define('DOMAIN_CURRENT_SITE', getenv('OPENSHIFT_APP_DNS'));
+define('DOMAIN_CURRENT_SITE', getenv('AMGOV_DOMAIN_CURRENT_SITE'));
 define('PATH_CURRENT_SITE', '/');
 define('SITE_ID_CURRENT_SITE', 1);
 define('BLOG_ID_CURRENT_SITE', 1);
@@ -216,7 +217,7 @@ if (getenv('SUBDOMAIN_INSTALL') == 'True') {
 } else {
 	define('SUBDOMAIN_INSTALL', false);
 }
-define('DOMAIN_CURRENT_SITE', getenv('OPENSHIFT_APP_DNS'));
+define('DOMAIN_CURRENT_SITE', getenv('AMGOV_DOMAIN_CURRENT_SITE'));
 define('PATH_CURRENT_SITE', '/');
 define('SITE_ID_CURRENT_SITE', 1);
 define('BLOG_ID_CURRENT_SITE', 1);
