@@ -1,3 +1,7 @@
+# :warning: THIS REPO HAS BEEN ARCHIVED :warning:
+
+This project has been archived and is no longer being maintained. The code is preserved here as a reference.
+
 # America.dev Multisite
 
 Built on top of the [Design Dev Box](https://github.com/USStateDept/design-dev-box).
@@ -264,10 +268,10 @@ Then go to the Themes menu and Network Activate the America.gov Base Theme.
 
 Let's add the following sites to the network by going to the Sites menu:
 
-* Climate Partners (climate.america.dev)
-* Interactive (interactive.america.dev)
-* Don't Be Fooled (facts.america.dev)
-* Documentation (docs.america.dev)
+- Climate Partners (climate.america.dev)
+- Interactive (interactive.america.dev)
+- Don't Be Fooled (facts.america.dev)
+- Documentation (docs.america.dev)
 
 Visit each site's Wordpress Admin and activate the America.gov Base Theme.
 
